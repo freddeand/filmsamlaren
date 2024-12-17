@@ -62,8 +62,9 @@ function listMovies(movies) {
   const uL = document.getElementsByClassName("movieList")[0];
   movies.forEach((movieList) => {
     const movieListItem = document.createElement("li");
+    movieListItem.classList.add("listCard");
     movieListItem.innerHTML = `
-        <img src="${movieList.poster}" alt="poster för ${movieList.title}">
+        <img id="imgCard" src="${movieList.poster}" alt="poster för ${movieList.title}">
         <p>${movieList.title}</p>
         <p>${movieList.year}</p>
         <a href="https://www.imdb.com/title/${movieList.imdbId}/"target="_blank"><button>Mer info</button></a>
