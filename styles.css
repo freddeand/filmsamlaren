@@ -1,0 +1,82 @@
+footer {
+  background: linear-gradient(to bottom, #262626, #8ccf78);
+  color: var(--textColor);
+  padding: 20px 0;
+  text-align: center;
+  margin-top: 20px;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+  color: #ddd;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 0 20px;
+}
+
+.footer-section {
+  flex: 1;
+  margin: 10px;
+  min-width: 200px;
+}
+
+.footer-section h4 {
+  margin-bottom: 15px;
+  font-size: 16px;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin: 5px 0;
+}
+
+.footer-section ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-section ul li a:hover {
+  text-decoration: underline;
+}
+
+.footer-section form {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-section form input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
+.footer-section form button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #555;
+  color: white;
+  cursor: pointer;
+}
+
+.footer-section form button:hover {
+  background-color: #777;
+}
+
+h4 {
+  color: white;
+}

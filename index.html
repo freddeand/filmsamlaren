@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MovieSearch</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header>
+      <section id="Mainpicture">
+        <section id="header">
+          <picture>
+            <img src="/img/logo.jpg" alt="Freddeskväll Logo"
+          /></picture>
+          <nav id="nav">
+            <ul id="ul">
+              <li><a href="/index.html">FILMSAMLING</a></li>
+              <li><a href="/index.html">KUNDKLUBBEN</a></li>
+              <li><a href="/index.html">KONTAKT</a></li>
+            </ul>
+          </nav>
+        </section>
+      </section>
+    
+    
+      <section class="search-section">
+        <div class="search-container">
+          <form id="searchForm">
+            <input type="text" id="search" placeholder="Sök film" required />
+            <button id="searchBtn">Sök</button>
+          </form>
+          <select id="categoryFilter">
+            <option value="all">Lista med Genrer</option>
+            <option value="action">Action</option>
+            <option value="comedy">Komedi</option>
+            <option value="horror">Skräck</option>
+            <option value="thriller">Thriller</option>
+          </select>
+        </div>
+    </header>
+        <main id="newsContainer">
+            <ul class="movieList"></ul>
+          </main>
+    <footer>
+      <div class="footer-container">
+        <div class="footer-section">
+          <h4>Följ mig!</h4>
+          <ul class="social-links">
+            <li><a href="https://facebook.com">Facebook</a></li>
+            <li><a href="https://twitter.com">Twitter</a></li>
+            <li><a href="https://instagram.com">Instagram</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-section">
+          <h4>Prenumerera</h4>
+          <form>
+            <input type="email" placeholder="Din e-postadress" required />
+            <button type="submit">Prenumerera</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2024 FREDDESKVÄLL. Alla rättigheter förbehållna.</p>
+        <p>
+          <a href="/privacy-policy">Integritetspolicy</a> |
+          <a href="/terms">Användarvillkor</a>
+        </p>
+      </div>
+    </footer>
+    <script src="/script.js"></script>
+  </body>
+</html>
