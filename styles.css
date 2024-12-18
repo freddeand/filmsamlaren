@@ -1,6 +1,55 @@
 main {
   background-color: #d9d9d9;
 }
+/* .mainPicture {
+  display: flex;
+  flex-direction: row;
+} */
+body {
+  margin: 10px;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  background-color: #f8f9fa00;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  top: 11px;
+  width: 95%;
+  gap: -502px;
+}
+.header picture img {
+  max-height: 50px; /* Adjust logo size if necessary */
+}
+
+#nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 20px; /* Space between menu items */
+}
+
+#nav ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+.Mainpicture {
+  height: 300px; /* Set the desired height */
+  display: flex; /* Centers the content */
+}
+.Mainpicture img {
+  width: 100%;
+  /* display: block; */
+  /* margin-top: 0px; */
+  height: 100%;
+  object-fit: cover;
+}
 .movieList {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -14,7 +63,7 @@ main {
   border: solid 2px black;
   border-radius: 10px;
   width: 510px;
-  height: 650px;
+  height: 700px;
   padding: 10px;
   font-family: "Mikado", sans-serif;
   font-size: 20px;
@@ -22,6 +71,10 @@ main {
 }
 #imgCard {
   border-radius: 10px;
+}
+p {
+  padding: 5px;
+  margin: 5px;
 }
 
 footer {
