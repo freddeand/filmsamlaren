@@ -4,14 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="/cardstyle.css" />
   </head>
   <body>
-    <div></div>
-    <img src="" alt="" />
-    <p></p>
-    <p></p>
-    <button>Imdb</button>
-    <button>Favorit</button>
-    <a href="" target="_blank"><button>Mer info.</button></a>
+    <ul class="movieList">
+    <li class="listCard">
+    <div class="divList">
+      <img
+        id="imgCard"
+        src="https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SX300.jpg"
+        alt="poster för ${detailData.title}"
+      />
+      <p>TITLE</p>
+      <p>Actors :${detailData.actors}</p>
+      <p>Runtime :${detailData.runtime}</p>
+      <p>Release year :${detailData.year}</p>
+      <p>Writers :${detailData.writer}</p>
+      <button class="imdbBtn">Läs mer på imdb</button>
+      <button class="favoritBtn">Favorit</button>
+      </li>
+      <li class="listCard">
+        <div class="divList">
+          <img
+            id="imgCard"
+            src="https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SX300.jpg"
+            alt="poster för ${detailData.title}"
+          />
+          <p>TITLE</p>
+          <p>Actors :${detailData.actors}</p>
+          <p>Runtime :${detailData.runtime}</p>
+          <p>Release year :${detailData.year}</p>
+          <p>Writers :${detailData.writer}</p>
+          <a href="https://www.imdb.com/title/${detailData.imdb}/" target="_blank"
+            ><button class="imdbBtn">Läs mer på imdb</button></a
+          ><button class="favoritBtn">Favorit</button>
+          </li>
+          <li class="listCard">
+            <div class="divList">
+              <img
+                id="imgCard"
+                src="https://m.media-amazon.com/images/M/MV5BMmU5NGJlMzAtMGNmOC00YjJjLTgyMzUtNjAyYmE4Njg5YWMyXkEyXkFqcGc@._V1_SX300.jpg"
+                alt="poster för ${detailData.title}"
+              />
+              <p>TITLE</p>
+              <p>Actors :${detailData.actors}</p>
+              <p>Runtime :${detailData.runtime}</p>
+              <p>Release year :${detailData.year}</p>
+              <p>Writers :${detailData.writer}</p>
+              <a href="https://www.imdb.com/title/${detailData.imdb}/" target="_blank"
+                ><button class="imdbBtn">Läs mer på imdb</button></a
+              ><button class="favoritBtn">Favorit</button>
+              </li>
+    </div>
+  </ul>
   </body>
 </html>

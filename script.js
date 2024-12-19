@@ -1,6 +1,6 @@
 const apikey = "b7dd0caa";
-let search = "Batman";
-let year = 2010;
+let search = "Harry potter";
+
 let movies = []; // array of IMDB ids. To use in the function moviesWithFullInfo()
 let moviesWithDetail = [];
 
@@ -82,12 +82,13 @@ function listMovies(moviesWithDetail) {
     movieListItem.classList.add("listCard");
     movieListItem.innerHTML = `<div class="divList">
         <img id="imgCard" src="${detailData.img}" alt="poster för ${detailData.title}">
-        <p>${detailData.title}</p>
+        <h3>${detailData.title}</h3>
         <p>Actors :${detailData.actors}</p>
         <p>Runtime :${detailData.runtime}</p>
         <p>Release year :${detailData.year}</p>
         <p>Writers :${detailData.writer}</p>
-        <a href="https://www.imdb.com/title/${detailData.imdb}/" target="_blank"><button class="imdbBtn">Läs mer på imdb</button></a><button class="favoritBtn">Favorit</button>
+       <button class="imdbBtn">Läs mer på imdb</button>
+       <button class="favoritBtn">Favorit</button>
         </div>`;
     // console.log(detailData.title);
 
@@ -132,9 +133,9 @@ function displayDataOnPage(data, input) {
   const dataOutput = document.getElementById("dataOutput");
 
   if (data === undefined) {
-    dataOutput.textContent = `Inga resultat hittades för ${input}. Försök söka efter något annat`;
+    dataOutput.textContent = `Inga resultat hittades för ${input}. Försök söka efter något annat!`;
   } else {
-    dataOutput.textContent = `Hittade ${data} filmer för ${input} i cyberrymden, visar upp 10st `;
+    dataOutput.textContent = `Hittade ${data} filmer för ${input} i cyberrymden, visar upp några förslag här nere =) `;
   }
 }
 // Call the search function
