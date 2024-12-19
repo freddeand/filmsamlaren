@@ -16,9 +16,8 @@ async function movieDataSearch() {
       );
     }
     let dataForSearch = await response.json();
-    // console.log("Är detta resultatet?", dataForSearch);
-    // console.log("Total Results från API:", dataForSearch.totalResults);
-    // console.log("Total Results från API:", dataForSearch.Error);
+    console.log("Är detta resultatet?", dataForSearch.Response);
+
     displayDataOnPage(dataForSearch.totalResults, search); // Skicka både resultat och input
     if (dataForSearch.Response === "False") {
       displayErrorMessage("Ingen film hittades med det namnet. Försök igen.");
@@ -44,7 +43,6 @@ async function moviesWithFullInfo() {
   for (const movie of movies) {
     try {
       const id = movie.imdbId; // Correctly access the imdbId
-      // console.log("Fetching data for IMDb ID:", id); // Debugging log
 
       let response = await fetch(
         `http://www.omdbapi.com/?i=${id}&type=movie&plot=full&apikey=${apikey}`
@@ -66,17 +64,13 @@ async function moviesWithFullInfo() {
       };
 
       moviesWithDetail.push(detailData);
-      // console.log("MOOOOVIES", moviesWithDetail);
     } catch (error) {
       console.error("Error fetching movie info:", error);
     }
   }
-  // Debugging: Kontrollera längden på moviesWithDetail
-  console.log("Movies with details:", moviesWithDetail);
-  console.log("Längd på moviesWithDetail:", moviesWithDetail.length);
+
   // Uppdatera efter alla filmer har hämtats
   listMovies(moviesWithDetail);
-  updateResultMessage(moviesWithDetail.length); // Uppdatera meddelandet
 }
 
 function listMovies(moviesWithDetail) {
@@ -110,6 +104,7 @@ async function searchNewMovies() {
     search = input;
     movies = []; // tömmer arrayen innan sökning.
     moviesWithDetail = []; // tömmer array
+    console.log("222", moviesWithDetail.length);
     let uL = document.getElementsByClassName("movieList")[0]; // klass för listan
     uL.innerHTML = ""; // Töm listan innan vi lägger till nya resultat
     const errorMessage = document.getElementById("error-message");
@@ -133,23 +128,14 @@ function displayErrorMessage(message) {
   searchContainer.appendChild(errorElement);
 }
 
-function updateResultMessage(count) {
-  const resultMessage = document.getElementById("resultMessage");
-  if (count === 10) {
-    resultMessage.textContent = `Visar upp ${count} filmer på websidan =).`;
-  }
-  if (Array.isArray(count) && count.length === 0) {
-    resultMessage.textContent = "";
-  }
-}
 function displayDataOnPage(data, input) {
   const dataOutput = document.getElementById("dataOutput");
+
   if (data === undefined) {
     dataOutput.textContent = `Inga resultat hittades för ${input}. Försök söka efter något annat`;
   } else {
-    dataOutput.textContent = `Hittade ${data} filmer för ${input} i cyberrymden`;
+    dataOutput.textContent = `Hittade ${data} filmer för ${input} i cyberrymden, visar upp 10st `;
   }
-  console.log("DATA FRÅN FILMER? ", data);
 }
 // Call the search function
 
