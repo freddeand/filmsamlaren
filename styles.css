@@ -182,3 +182,9 @@ footer a svg {
 footer a:hover svg {
   fill: #0073e6;
 }
+#error-message {
+  font-size: 0.9rem;
+  color: red;
+  margin-top: 10px;
+  text-align: center;
+}
