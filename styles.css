@@ -133,6 +133,7 @@ body {
   transition: background-color 0.3s ease, transform 0.2s ease;
   width: 100px;
 }
+
 .searchBtn:hover {
   background-color: #0056b3;
   transform: scale(1.05);

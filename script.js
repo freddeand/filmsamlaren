@@ -19,10 +19,10 @@ async function movieDataSearch() {
     console.log("Är detta resultatet?", dataForSearch.Response);
 
     displayDataOnPage(dataForSearch.totalResults, search); // Skicka både resultat och input
-    if (dataForSearch.Response === "False") {
-      displayErrorMessage("Ingen film hittades med det namnet. Försök igen.");
-      return;
-    }
+    // if (dataForSearch.Response === "False") {
+    //   displayErrorMessage("Ingen film hittades med det namnet. Försök igen.");
+    //   return;
+    // }
 
     let mappedData = dataForSearch.Search.map((item) => ({
       imdbId: item.imdbID,
@@ -31,9 +31,9 @@ async function movieDataSearch() {
     moviesWithFullInfo();
   } catch (error) {
     console.error(error);
-    displayErrorMessage(
-      "Ett fel inträffade vid sökningen. Försök igen senare."
-    );
+    // displayErrorMessage(
+    //   "Ett fel inträffade vid sökningen. Försök igen senare."
+    // );
   }
 }
 
@@ -72,6 +72,7 @@ async function moviesWithFullInfo() {
   // Uppdatera efter alla filmer har hämtats
   listMovies(moviesWithDetail);
   imdbNewWindow();
+  saveToLocalStorage();
 }
 
 function listMovies(moviesWithDetail) {
@@ -89,7 +90,7 @@ function listMovies(moviesWithDetail) {
         <p>Release year :${detailData.year}</p>
         <p>Writers :${detailData.writer}</p>
        <button class="imdbBtn">Läs mer på imdb</button>
-       <button class="favoritBtn">Favorit</button>
+       <button class="favoritBtn">Lägg till i Favoriter?</button>
         </div>`;
     // console.log(detailData.title);
 
@@ -136,15 +137,76 @@ function imdbNewWindow() {
     });
   });
 }
+function saveToLocalStorage() {
+  const favBtn = document.querySelectorAll(".favoritBtn");
 
-function displayErrorMessage(message) {
-  const searchContainer = document.querySelector(".search-container");
-  const errorElement = document.createElement("p");
-  errorElement.id = "error-message";
-  errorElement.textContent = message;
-  errorElement.style.color = "red";
-  errorElement.style.marginTop = "10px";
-  searchContainer.appendChild(errorElement);
+  favBtn.forEach((button, index) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const detailData = moviesWithDetail[index];
+
+      if (detailData) {
+        // Retrieve the current favorites from localStorage
+        let favoriteMovies =
+          JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+
+        // Check if the movie is already in the array to prevent duplicates
+        if (!favoriteMovies.some((movie) => movie.imdb === detailData.imdb)) {
+          favoriteMovies.push(detailData);
+
+          // Save the updated array back to localStorage
+          localStorage.setItem(
+            "favoriteMovies",
+            JSON.stringify(favoriteMovies)
+          );
+          console.log(`Saved movie "${detailData.title}" to favorites.`);
+
+          // Update the UI with the new favorite
+          addFavoriteMovie(detailData);
+
+          toggleFavoriteButton();
+        } else {
+          console.log("This movie is already in favorites!");
+        }
+      }
+    });
+  });
+}
+
+function addFavoriteMovie(detailData) {
+  const favBox = document.querySelector(".favoriteMovie");
+  const favMovieCard = document.createElement("div");
+  favMovieCard.classList.add("favorite-card");
+
+  favMovieCard.innerHTML = `
+    <p>${detailData.title}</p>
+    <button class="remove-fav-btn">Ta bort</button>
+  `;
+
+  favBox.appendChild(favMovieCard);
+
+  // Add functionality to the "Ta bort" button
+  const removeButton = favMovieCard.querySelector(".remove-fav-btn");
+  removeButton.addEventListener("click", () => {
+    favBox.removeChild(favMovieCard); // Remove the card from the container
+    removeFavorite(detailData.imdb); // Remove from localStorage
+    console.log(`${detailData.title} has been removed from favorites.`);
+  });
+}
+
+function removeFavorite(imdbId) {
+  let favoriteMovies = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+  favoriteMovies = favoriteMovies.filter((movie) => movie.imdb !== imdbId);
+  localStorage.setItem("favoriteMovies", JSON.stringify(favoriteMovies));
+  console.log(`Removed movie with IMDb ID ${imdbId} from favorites.`);
+}
+function loadFavorites() {
+  const favoriteMovies =
+    JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+  favoriteMovies.forEach((movie) => {
+    addFavoriteMovie(movie); // Add each favorite movie to the UI
+  });
 }
 
 function displayDataOnPage(data, input) {
@@ -156,7 +218,47 @@ function displayDataOnPage(data, input) {
     dataOutput.textContent = `Hittade ${data} filmer för ${input} i cyberrymden, visar upp några förslag här nere =) `;
   }
 }
-// Call the search function
+function toggleFavoriteButton() {
+  const favoriteButton = document.querySelector(".favoriteContainerBtn");
+  const favoriteMovie = document.querySelector(".favoriteMovie");
+
+  // Function to check if the button should be shown or hidden
+  function updateFavoriteButtonVisibility() {
+    const favoriteMovies =
+      JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+
+    // If no favorites, hide the button, otherwise show it
+    if (favoriteMovies.length === 0) {
+      favoriteButton.style.display = "none";
+    } else {
+      favoriteButton.style.display = "block";
+    }
+  }
+
+  // Call the function initially to set the visibility
+  updateFavoriteButtonVisibility();
+
+  // Toggle the visibility of the favoriteMovie container when the button is clicked
+  favoriteButton.addEventListener("click", () => {
+    if (
+      favoriteMovie.style.display === "none" ||
+      favoriteMovie.style.display === ""
+    ) {
+      favoriteMovie.style.display = "block"; // Show the element
+    } else {
+      favoriteMovie.style.display = "none"; // Hide the element
+    }
+  });
+
+  // Update the visibility whenever a favorite is added or removed
+  window.addEventListener("storage", updateFavoriteButtonVisibility);
+}
+
+// Call the function on page load
+document.addEventListener("DOMContentLoaded", toggleFavoriteButton);
+
+// Call function
 
 searchNewMovies();
 movieDataSearch();
+loadFavorites();

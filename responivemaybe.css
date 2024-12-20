@@ -212,17 +212,14 @@ button:hover {
 .favoriteContainerBtn:hover {
   background-color: #2c3b56;
 }
+
 #dataOutput {
   color: white;
   font-family: "Mikado", sans-serif;
   text-align: center;
 }
-#error-message {
-  font-size: 0.9rem;
-  color: red;
-  margin-top: 10px;
-  text-align: center;
-  font-family: "Mikado", sans-serif;
+.favoriteMovie {
+  display: none; /* Initially hide it */
 }
 footer {
   text-align: center;
