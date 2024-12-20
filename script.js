@@ -64,15 +64,19 @@ async function moviesWithFullInfo() {
       };
 
       moviesWithDetail.push(detailData);
+      if (!moviesWithDetail.some((movie) => movie.imdb === detailData.imdb)) {
+        moviesWithDetail.push(detailData);
+      }
+      // console.log(detailData);
+      console.log(moviesWithDetail);
     } catch (error) {
       console.error("Error fetching movie info:", error);
     }
   }
-
-  // Uppdatera efter alla filmer har hämtats
-  listMovies(moviesWithDetail);
-  imdbNewWindow();
-  saveToLocalStorage();
+  listMovies(moviesWithDetail); // Lägg till filmerna i listan
+  imdbNewWindow(); // Koppla IMDB-knappar
+  saveToLocalStorage(); // Aktivera spara-favoriter-knappar
+  restoreFavoriteButtonState(); // Återställ favoritknappar
 }
 
 function listMovies(moviesWithDetail) {
@@ -137,6 +141,7 @@ function imdbNewWindow() {
     });
   });
 }
+// Modified saveToLocalStorage function
 function saveToLocalStorage() {
   const favBtn = document.querySelectorAll(".favoritBtn");
 
@@ -160,10 +165,27 @@ function saveToLocalStorage() {
             "favoriteMovies",
             JSON.stringify(favoriteMovies)
           );
+
           console.log(`Saved movie "${detailData.title}" to favorites.`);
 
           // Update the UI with the new favorite
           addFavoriteMovie(detailData);
+
+          // Save the button's state as disabled in localStorage
+          let favoriteButtonsState =
+            JSON.parse(localStorage.getItem("favoriteButtonsState")) || [];
+          favoriteButtonsState.push({
+            imdbId: detailData.imdb,
+            state: "Tillagd!",
+          });
+          localStorage.setItem(
+            "favoriteButtonsState",
+            JSON.stringify(favoriteButtonsState)
+          );
+
+          // Disable the specific button and change its text content
+          button.disabled = true;
+          button.textContent = "Tillagd!";
 
           toggleFavoriteButton();
         } else {
@@ -174,6 +196,29 @@ function saveToLocalStorage() {
   });
 }
 
+// Modified restoreFavoriteButtonState function
+function restoreFavoriteButtonState() {
+  const favBtn = document.querySelectorAll(".favoritBtn");
+  // läser tillståndet från localstorage
+  const favoriteButtonsState =
+    JSON.parse(localStorage.getItem("favoriteButtonsState")) || [];
+  // uppdaterar varje knapp baserat på sparat tillstånd.
+  favBtn.forEach((button, index) => {
+    const imdbId = moviesWithDetail[index]?.imdb;
+    const favoriteState = favoriteButtonsState.find(
+      (item) => item.imdbId === imdbId
+    );
+
+    // If the movie is found in the favorite state, set the button text to "Tillagd!" and disable it
+    if (favoriteState) {
+      button.textContent = favoriteState.state; // Set the button text to "Tillagd!"
+      button.disabled = true; // Disable the button
+    }
+  });
+}
+
+// Call the restore function on page load
+// document.addEventListener("DOMContentLoaded", restoreFavoriteButtonState);
 function addFavoriteMovie(detailData) {
   const favBox = document.querySelector(".favoriteMovie");
   const favMovieCard = document.createElement("div");
@@ -191,14 +236,35 @@ function addFavoriteMovie(detailData) {
   removeButton.addEventListener("click", () => {
     favBox.removeChild(favMovieCard); // Remove the card from the container
     removeFavorite(detailData.imdb); // Remove from localStorage
+    const favBtn = document.querySelectorAll(".favoritBtn");
+    favBtn.forEach((button, index) => {
+      const movie = moviesWithDetail[index];
+      if (movie && movie.imdb === detailData.imdb) {
+        button.disabled = false;
+        button.textContent = "Lägg till i Favoriter?";
+      }
+    });
+
     console.log(`${detailData.title} has been removed from favorites.`);
   });
 }
 
 function removeFavorite(imdbId) {
+  // tar bort filmerna från favoriter.
   let favoriteMovies = JSON.parse(localStorage.getItem("favoriteMovies")) || [];
   favoriteMovies = favoriteMovies.filter((movie) => movie.imdb !== imdbId);
   localStorage.setItem("favoriteMovies", JSON.stringify(favoriteMovies));
+  // Ta bort knapptillståndet från favoriteButtonsState
+  let favoriteButtonsState =
+    JSON.parse(localStorage.getItem("favoriteButtonsState")) || [];
+  favoriteButtonsState = favoriteButtonsState.filter(
+    (item) => item.imdbId !== imdbId
+  );
+  localStorage.setItem(
+    "favoriteButtonsState",
+    JSON.stringify(favoriteButtonsState)
+  );
+
   console.log(`Removed movie with IMDb ID ${imdbId} from favorites.`);
 }
 function loadFavorites() {
@@ -251,14 +317,18 @@ function toggleFavoriteButton() {
   });
 
   // Update the visibility whenever a favorite is added or removed
-  window.addEventListener("storage", updateFavoriteButtonVisibility);
+  // window.addEventListener("storage", updateFavoriteButtonVisibility);
 }
 
 // Call the function on page load
-document.addEventListener("DOMContentLoaded", toggleFavoriteButton);
+document.addEventListener("DOMContentLoaded", () => {
+  loadFavorites(); // Ladda favoritfilmer
+  toggleFavoriteButton(); // Hantera favoritknappens synlighet
+  // restoreFavoriteButtonState(); // Återställ knapptillstånd
+});
 
 // Call function
 
 searchNewMovies();
 movieDataSearch();
-loadFavorites();
+// loadFavorites();
