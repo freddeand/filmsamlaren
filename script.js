@@ -71,6 +71,7 @@ async function moviesWithFullInfo() {
 
   // Uppdatera efter alla filmer har hämtats
   listMovies(moviesWithDetail);
+  imdbNewWindow();
 }
 
 function listMovies(moviesWithDetail) {
@@ -96,9 +97,9 @@ function listMovies(moviesWithDetail) {
   }
 }
 
-const searchForm = document.getElementById("searchForm");
-const searchInput = document.getElementById("search");
-async function searchNewMovies() {
+function searchNewMovies() {
+  const searchForm = document.getElementById("searchForm");
+  const searchInput = document.getElementById("search");
   searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const input = searchInput.value.trim().toLowerCase();
@@ -116,6 +117,23 @@ async function searchNewMovies() {
     console.log("Du skrev in", input);
 
     searchInput.value = "";
+  });
+}
+function imdbNewWindow() {
+  const imdbBtn = document.querySelectorAll(".imdbBtn");
+
+  imdbBtn.forEach((button, index) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      console.log("imdb?");
+
+      const imdbId = moviesWithDetail[index]?.imdb;
+      if (imdbId) {
+        window.open(`https://www.imdb.com/title/${imdbId}`, "_blank");
+      } else {
+        console.error("IMDB ID not found for button index:", index);
+      }
+    });
   });
 }
 
