@@ -193,7 +193,7 @@ function saveToLocalStorage() {
             JSON.parse(localStorage.getItem("favoriteButtonsState")) || [];
           favoriteButtonsState.push({
             imdbId: detailData.imdb,
-            state: "Tillagd!",
+            state: "Tillagd i favoriter!",
           });
           localStorage.setItem(
             "favoriteButtonsState",
@@ -304,17 +304,19 @@ function displayDataOnPage(data, input) {
 function toggleFavoriteButton() {
   const favoriteButton = document.querySelector(".favoriteContainerBtn");
   const favoriteMovie = document.querySelector(".favoriteMovie");
-
-  // Function to check if the button should be shown or hidden
-  function updateFavoriteButtonVisibility() {
+  // Function to check if there are movies in localStorage
+  function hasFavoriteMovies() {
     const favoriteMovies =
       JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+    return favoriteMovies.length > 0;
+  }
 
-    // If no favorites, hide the button, otherwise show it
-    if (favoriteMovies.length === 0) {
-      favoriteButton.style.display = "none";
-    } else {
+  // Function to update the visibility of the favoriteButton
+  function updateFavoriteButtonVisibility() {
+    if (hasFavoriteMovies()) {
       favoriteButton.style.display = "block";
+    } else {
+      favoriteButton.style.display = "none";
     }
   }
 
@@ -323,29 +325,29 @@ function toggleFavoriteButton() {
 
   // Toggle the visibility of the favoriteMovie container when the button is clicked
   favoriteButton.addEventListener("click", () => {
-    if (
-      favoriteMovie.style.display === "none" ||
-      favoriteMovie.style.display === ""
-    ) {
-      favoriteMovie.style.display = "block"; // Show the element
+    // Check if there are movies in localStorage before toggling
+    if (hasFavoriteMovies()) {
+      if (
+        favoriteMovie.style.display === "none" ||
+        favoriteMovie.style.display === ""
+      ) {
+        favoriteMovie.style.display = "block"; // Show the element
+      } else {
+        favoriteMovie.style.display = "none"; // Hide the element
+      }
     } else {
-      favoriteMovie.style.display = "none"; // Hide the element
+      console.log("inga favoriter.");
     }
   });
-
-  // Update the visibility whenever a favorite is added or removed
-  // window.addEventListener("storage", updateFavoriteButtonVisibility);
 }
 
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadFavorites(); // Ladda favoritfilmer
   toggleFavoriteButton(); // Hantera favoritknappens synlighet
-  // restoreFavoriteButtonState(); // Återställ knapptillstånd
 });
 
 // Call function
 
 searchNewMovies();
 movieDataSearch();
-// loadFavorites();
