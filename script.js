@@ -19,10 +19,6 @@ async function movieDataSearch() {
     console.log("Är detta resultatet?", dataForSearch.Response);
 
     displayDataOnPage(dataForSearch.totalResults, search); // Skicka både resultat och input
-    // if (dataForSearch.Response === "False") {
-    //   displayErrorMessage("Ingen film hittades med det namnet. Försök igen.");
-    //   return;
-    // }
 
     let mappedData = dataForSearch.Search.map((item) => ({
       imdbId: item.imdbID,
@@ -31,13 +27,34 @@ async function movieDataSearch() {
     moviesWithFullInfo();
   } catch (error) {
     console.error(error);
-    // displayErrorMessage(
-    //   "Ett fel inträffade vid sökningen. Försök igen senare."
-    // );
+    switch (error.message) {
+      case "HTTP_400":
+        console.error(
+          "Error 400: Bad Request. Please check the API parameters."
+        );
+        dataOutput.textContent =
+          "Error 400: Bad Request. Please check the API parameters.";
+        break;
+      case "HTTP_401":
+        console.error("Error 401: Unauthorized. Check your API key.");
+        dataOutput.textContent = "Error 401: Unauthorized. Check your API key.";
+        break;
+      case "HTTP_404":
+        console.error("Error 404: Movie not found.");
+        dataOutput.textContent = "Error 404: Movie not found.";
+        break;
+      case "HTTP_500":
+        console.error("Error 500: Server error. Please try again later.");
+        dataOutput.textContent =
+          "Error 500: Server error. Please try again later.";
+        break;
+      default:
+        console.error("An unknown error occurred:", error);
+        dataOutput.textContent = `Inga resultat hittades för ${input}. Försök söka efter något annat!`;
+        break;
+    }
   }
 }
-
-// console.log(movies);
 
 async function moviesWithFullInfo() {
   for (const movie of movies) {
@@ -94,7 +111,7 @@ function listMovies(moviesWithDetail) {
         <p>Release year :${detailData.year}</p>
         <p>Writers :${detailData.writer}</p>
        <button class="imdbBtn">Läs mer på imdb</button>
-       <button class="favoritBtn">Lägg till i Favoriter?</button>
+       <button class="favoritBtn">Lägg till i Favoriter</button>
         </div>`;
     // console.log(detailData.title);
 
@@ -185,7 +202,7 @@ function saveToLocalStorage() {
 
           // Disable the specific button and change its text content
           button.disabled = true;
-          button.textContent = "Tillagd!";
+          button.textContent = "Tillagd i favoriter!";
 
           toggleFavoriteButton();
         } else {
@@ -218,7 +235,7 @@ function restoreFavoriteButtonState() {
 }
 
 // Call the restore function on page load
-// document.addEventListener("DOMContentLoaded", restoreFavoriteButtonState);
+
 function addFavoriteMovie(detailData) {
   const favBox = document.querySelector(".favoriteMovie");
   const favMovieCard = document.createElement("div");
@@ -241,7 +258,7 @@ function addFavoriteMovie(detailData) {
       const movie = moviesWithDetail[index];
       if (movie && movie.imdb === detailData.imdb) {
         button.disabled = false;
-        button.textContent = "Lägg till i Favoriter?";
+        button.textContent = "Lägg till i Favoriter";
       }
     });
 
@@ -281,7 +298,7 @@ function displayDataOnPage(data, input) {
   if (data === undefined) {
     dataOutput.textContent = `Inga resultat hittades för ${input}. Försök söka efter något annat!`;
   } else {
-    dataOutput.textContent = `Hittade ${data} filmer för ${input} i cyberrymden, visar upp några förslag här nere =) `;
+    dataOutput.textContent = `Hittade ${data} filmer för ${input}, visar upp några förslag här nere =) `;
   }
 }
 function toggleFavoriteButton() {
