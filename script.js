@@ -11,47 +11,58 @@ async function movieDataSearch() {
       `http://www.omdbapi.com/?s=${search}&type=movie&plot=full&apikey=${apikey}`
     );
     if (!response.ok) {
-      throw new Error(
-        `Error i hämtning av API: ${response.status} ${response.statusText}`
-      );
+      switch (response.status) {
+        case 400:
+          throw new Error("HTTP_400");
+        case 401:
+          throw new Error("HTTP_401");
+        case 404:
+          throw new Error("HTTP_404");
+        case 500:
+          throw new Error("HTTP_500");
+        default:
+          throw new Error(`HTTP_${response.status}`);
+      }
     }
+
     let dataForSearch = await response.json();
     console.log("Är detta resultatet?", dataForSearch.Response);
 
-    displayDataOnPage(dataForSearch.totalResults, search); // Skicka både resultat och input
+    if (dataForSearch.Response === "True") {
+      displayDataOnPage(dataForSearch.totalResults, search);
+      displayDataOnPage(dataForSearch.totalResults, search); // Skicka både resultat och input
 
-    let mappedData = dataForSearch.Search.map((item) => ({
-      imdbId: item.imdbID,
-    }));
-    movies.push(...mappedData);
-    moviesWithFullInfo();
+      let mappedData = dataForSearch.Search.map((item) => ({
+        imdbId: item.imdbID,
+      }));
+      movies.push(...mappedData);
+      moviesWithFullInfo();
+    } else {
+      throw new Error(`No results for query: ${search}`);
+    }
   } catch (error) {
     console.error(error);
+    let errorMessage = "";
     switch (error.message) {
       case "HTTP_400":
-        console.error(
-          "Error 400: Bad Request. Please check the API parameters."
-        );
-        dataOutput.textContent =
+        errorMessage =
           "Error 400: Bad Request. Please check the API parameters.";
         break;
       case "HTTP_401":
-        console.error("Error 401: Unauthorized. Check your API key.");
-        dataOutput.textContent = "Error 401: Unauthorized. Check your API key.";
+        errorMessage = "Error 401: Unauthorized. Check your API key.";
         break;
       case "HTTP_404":
-        console.error("Error 404: Movie not found.");
-        dataOutput.textContent = "Error 404: Movie not found.";
+        errorMessage = "Error 404: Movie not found.";
         break;
       case "HTTP_500":
-        console.error("Error 500: Server error. Please try again later.");
-        dataOutput.textContent =
-          "Error 500: Server error. Please try again later.";
+        errorMessage = "Error 500: Server error. Please try again later.";
         break;
       default:
-        console.error("An unknown error occurred:", error);
-        dataOutput.textContent = `Inga resultat hittades för ${input}. Försök söka efter något annat!`;
+        errorMessage = `Inga resultat hittades för ${search}. Försök söka efter något annat!`;
         break;
+    }
+    if (dataOutput) {
+      dataOutput.textContent = errorMessage;
     }
   }
 }
@@ -84,8 +95,8 @@ async function moviesWithFullInfo() {
       if (!moviesWithDetail.some((movie) => movie.imdb === detailData.imdb)) {
         moviesWithDetail.push(detailData);
       }
-      // console.log(detailData);
-      console.log(moviesWithDetail);
+      // console.log("DETAILDATA", detailData);
+      console.log("MOVIESWITHDETAIL", moviesWithDetail);
     } catch (error) {
       console.error("Error fetching movie info:", error);
     }
@@ -124,7 +135,7 @@ function searchNewMovies() {
   const searchInput = document.getElementById("search");
   searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const input = searchInput.value.trim().toLowerCase();
+    const input = searchInput.value.toLowerCase();
     search = input;
     movies = []; // tömmer arrayen innan sökning.
     moviesWithDetail = []; // tömmer array
@@ -158,7 +169,7 @@ function imdbNewWindow() {
     });
   });
 }
-// Modified saveToLocalStorage function
+// saveToLocalStorage function
 function saveToLocalStorage() {
   const favBtn = document.querySelectorAll(".favoritBtn");
 
@@ -203,6 +214,7 @@ function saveToLocalStorage() {
           // Disable the specific button and change its text content
           button.disabled = true;
           button.textContent = "Tillagd i favoriter!";
+          button.style.backgroundColor = "#7bdcb5";
 
           toggleFavoriteButton();
         } else {
@@ -213,7 +225,7 @@ function saveToLocalStorage() {
   });
 }
 
-// Modified restoreFavoriteButtonState function
+// restoreFavoriteButtonState function
 function restoreFavoriteButtonState() {
   const favBtn = document.querySelectorAll(".favoritBtn");
   // läser tillståndet från localstorage
@@ -230,6 +242,7 @@ function restoreFavoriteButtonState() {
     if (favoriteState) {
       button.textContent = favoriteState.state; // Set the button text to "Tillagd!"
       button.disabled = true; // Disable the button
+      button.style.backgroundColor = "#7bdcb5";
     }
   });
 }
@@ -259,6 +272,7 @@ function addFavoriteMovie(detailData) {
       if (movie && movie.imdb === detailData.imdb) {
         button.disabled = false;
         button.textContent = "Lägg till i Favoriter";
+        button.style.backgroundColor = "#fcb900";
       }
     });
 
@@ -326,6 +340,7 @@ function toggleFavoriteButton() {
   // Toggle the visibility of the favoriteMovie container when the button is clicked
   favoriteButton.addEventListener("click", () => {
     // Check if there are movies in localStorage before toggling
+    console.log(favoriteButton);
     if (hasFavoriteMovies()) {
       if (
         favoriteMovie.style.display === "none" ||

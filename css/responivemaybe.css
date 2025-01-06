@@ -19,7 +19,8 @@ main {
   background-color: rgba(0, 0, 0, 0.575);
   justify-content: center;
   border-radius: 10px 10px 0px 0px;
-  padding: 20px;
+  padding: 30px;
+  margin: 40px;
 }
 
 /* Header Styling */
@@ -140,6 +141,7 @@ main {
   gap: 20px;
   font-family: "Mikado", sans-serif;
   justify-items: center;
+  margin: 50px;
 }
 
 /* Movie Card */
@@ -188,19 +190,25 @@ button {
 }
 
 button:hover {
-  background-color: #8e8e8e;
+  /* background-color: #8e8e8e; */
 }
 
-.imdbBtn,
-.favoritBtn {
+.imdbBtn {
+  font-family: "Mikado", sans-serif;
   background-color: #1e3a5f;
   color: #fff;
   font-size: 16px;
   font-weight: bold;
 }
+.favoritBtn {
+  font-family: "Mikado", sans-serif;
+  background-color: #fcb900;
+  color: #0e0d0d;
+  font-size: 16px;
+  font-weight: bold;
+}
 
-.imdbBtn:hover,
-.favoritBtn:hover {
+.imdbBtn:hover {
   background-color: #16324d;
 }
 
