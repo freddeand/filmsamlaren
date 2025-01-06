@@ -29,7 +29,6 @@ async function movieDataSearch() {
     console.log("Är detta resultatet?", dataForSearch.Response);
 
     if (dataForSearch.Response === "True") {
-      displayDataOnPage(dataForSearch.totalResults, search);
       displayDataOnPage(dataForSearch.totalResults, search); // Skicka både resultat och input
 
       let mappedData = dataForSearch.Search.map((item) => ({
@@ -216,7 +215,7 @@ function saveToLocalStorage() {
           button.textContent = "Tillagd i favoriter!";
           button.style.backgroundColor = "#7bdcb5";
 
-          toggleFavoriteButton();
+          updateFavoriteButtonVisibility();
         } else {
           console.log("This movie is already in favorites!");
         }
@@ -297,6 +296,7 @@ function removeFavorite(imdbId) {
   );
 
   console.log(`Removed movie with IMDb ID ${imdbId} from favorites.`);
+  updateFavoriteButtonVisibility();
 }
 function loadFavorites() {
   const favoriteMovies =
@@ -304,6 +304,7 @@ function loadFavorites() {
   favoriteMovies.forEach((movie) => {
     addFavoriteMovie(movie); // Add each favorite movie to the UI
   });
+  updateFavoriteButtonVisibility();
 }
 
 function displayDataOnPage(data, input) {
@@ -315,51 +316,47 @@ function displayDataOnPage(data, input) {
     dataOutput.textContent = `Hittade ${data} filmer för ${input}, visar upp några förslag här nere =) `;
   }
 }
-function toggleFavoriteButton() {
-  const favoriteButton = document.querySelector(".favoriteContainerBtn");
-  const favoriteMovie = document.querySelector(".favoriteMovie");
-  // Function to check if there are movies in localStorage
-  function hasFavoriteMovies() {
-    const favoriteMovies =
-      JSON.parse(localStorage.getItem("favoriteMovies")) || [];
-    return favoriteMovies.length > 0;
-  }
 
-  // Function to update the visibility of the favoriteButton
-  function updateFavoriteButtonVisibility() {
-    if (hasFavoriteMovies()) {
-      favoriteButton.style.display = "block";
-    } else {
-      favoriteButton.style.display = "none";
-    }
-  }
-
-  // Call the function initially to set the visibility
-  updateFavoriteButtonVisibility();
-
-  // Toggle the visibility of the favoriteMovie container when the button is clicked
-  favoriteButton.addEventListener("click", () => {
-    // Check if there are movies in localStorage before toggling
-    console.log(favoriteButton);
-    if (hasFavoriteMovies()) {
-      if (
-        favoriteMovie.style.display === "none" ||
-        favoriteMovie.style.display === ""
-      ) {
-        favoriteMovie.style.display = "block"; // Show the element
-      } else {
-        favoriteMovie.style.display = "none"; // Hide the element
-      }
-    } else {
-      console.log("inga favoriter.");
-    }
-  });
+const favoriteButton = document.querySelector(".favoriteContainerBtn");
+const favoriteMovie = document.querySelector(".favoriteMovie");
+// Function to check if there are movies in localStorage
+function hasFavoriteMovies() {
+  const favoriteMovies =
+    JSON.parse(localStorage.getItem("favoriteMovies")) || [];
+  return favoriteMovies.length > 0;
 }
+
+// Function to update the visibility of the favoriteButton
+function updateFavoriteButtonVisibility() {
+  if (hasFavoriteMovies()) {
+    favoriteButton.style.display = "block";
+  } else {
+    favoriteButton.style.display = "none";
+  }
+}
+
+// Toggle the visibility of the favoriteMovie container when the button is clicked
+favoriteButton.addEventListener("click", () => {
+  // Check if there are movies in localStorage before toggling
+  console.log(favoriteButton);
+  if (hasFavoriteMovies()) {
+    if (
+      favoriteMovie.style.display === "none" ||
+      favoriteMovie.style.display === ""
+    ) {
+      favoriteMovie.style.display = "block"; // Show the element
+    } else {
+      favoriteMovie.style.display = "none"; // Hide the element
+    }
+  } else {
+    console.log("inga favoriter.");
+  }
+});
 
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadFavorites(); // Ladda favoritfilmer
-  toggleFavoriteButton(); // Hantera favoritknappens synlighet
+  updateFavoriteButtonVisibility();
 });
 
 // Call function
