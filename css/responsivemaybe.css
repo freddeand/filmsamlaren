@@ -226,10 +226,15 @@ button:hover {
   background-color: #8e8e8e;
 }
 
-.imdbBtn,
-.favoritBtn {
+.imdbBtn {
   background-color: #1e3a5f;
   color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+}
+.favoritBtn {
+  background-color: #fcb900;
+  color: #070707;
   font-size: 16px;
   font-weight: bold;
 }
