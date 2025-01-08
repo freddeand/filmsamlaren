@@ -116,11 +116,8 @@ function listMovies(moviesWithDetail) {
     movieListItem.innerHTML = `<div class="divList">
         <img id="imgCard" src="${detailData.img}" alt="poster för ${detailData.title}">
         <h3>${detailData.title}</h3>
-        <p>Actors :${detailData.actors}</p>
-        <p>Runtime :${detailData.runtime}</p>
-        <p>Release year :${detailData.year}</p>
-        <p>Writers :${detailData.writer}</p>
-       <button class="imdbBtn">Läs mer på imdb</button>
+        
+       <button class="imdbBtn">Mer info</button>
        <button class="favoritBtn">Lägg till i Favoriter</button>
         </div>`;
     // console.log(detailData.title);
@@ -128,41 +125,23 @@ function listMovies(moviesWithDetail) {
     uL.appendChild(movieListItem);
   }
 }
+// <p>Actors :${detailData.actors}</p>
+// <p>Runtime :${detailData.runtime}</p>
+// <p>Release year :${detailData.year}</p>
+// <p>Writers :${detailData.writer}</p>
 
-function searchNewMovies() {
-  const searchForm = document.getElementById("searchForm");
-  const searchInput = document.getElementById("search");
-  searchForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const input = searchInput.value.toLowerCase();
-    search = input;
-    movies = []; // tömmer arrayen innan sökning.
-    moviesWithDetail = []; // tömmer array
-    console.log("222", moviesWithDetail.length);
-    let uL = document.getElementsByClassName("movieList")[0]; // klass för listan
-    uL.innerHTML = ""; // Töm listan innan vi lägger till nya resultat
-    const errorMessage = document.getElementById("error-message");
-    if (errorMessage) {
-      errorMessage.remove(); // Rensa tidigare felmeddelande
-    }
-    movieDataSearch();
-    console.log("Du skrev in", input);
-
-    searchInput.value = "";
-  });
-}
 function imdbNewWindow() {
   const imdbBtn = document.querySelectorAll(".imdbBtn");
 
   imdbBtn.forEach((button, index) => {
     button.addEventListener("click", (e) => {
       e.preventDefault();
-      console.log("imdb?");
 
-      const imdbId = moviesWithDetail[index]?.imdb;
-      if (imdbId) {
-        window.open(`https://www.imdb.com/title/${imdbId}`, "_blank");
+      const movie = moviesWithDetail[index];
+      if (movie) {
+        showModal(movie);
       } else {
+        console.error("Movie details not found for button index:", index);
         console.error("IMDB ID not found for button index:", index);
       }
     });
