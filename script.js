@@ -331,7 +331,38 @@ favoriteButton.addEventListener("click", () => {
     console.log("inga favoriter.");
   }
 });
+function showModal(movie) {
+  const modal = document.getElementById("imdbModal");
+  const modalContent = document.getElementById("modalMovieContent");
+  const closeModal = document.querySelector(".close");
 
+  // Populate modal content
+  modalContent.innerHTML = `
+    <img src="${movie.img}" alt="Poster for ${movie.title}" style="width: 200px; height: auto; margin-bottom: 10px;">
+    <h2>${movie.title}</h2>
+    <p><strong>Actors:</strong> ${movie.actors}</p>
+    <p><strong>Runtime:</strong> ${movie.runtime}</p>
+    <p><strong>Release Year:</strong> ${movie.year}</p>
+    <p><strong>Genre:</strong> ${movie.genre}</p>
+    <p><strong>Writers:</strong> ${movie.writer}</p>
+    <p><strong>Klicka här för att komma vidare till IMDB:</strong> <a href="https://www.imdb.com/title/${movie.imdb}" target="_blank">IMDB</a></p>
+  `;
+
+  // Show the modal
+  modal.style.display = "block";
+
+  // Add close functionality
+  closeModal.addEventListener("click", () => {
+    modal.style.display = "none";
+  });
+
+  // Close modal when clicking outside the modal content
+  window.addEventListener("click", (event) => {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+}
 // Call the function on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadFavorites(); // Ladda favoritfilmer
@@ -340,5 +371,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Call function
 
-searchNewMovies();
+moviesWithFullInfo();
 movieDataSearch();
